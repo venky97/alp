@@ -2,10 +2,11 @@
 .data
 disp1 db 'Enter User Name: $'
 disp2 db 'Enter Password: $'
-usr_dict db 'himynameis', 'pointlessb' , 'adirasamam' , 'beddingisl'
-pass_dict db 'firstpas' , 'secondpa' , 'thirdpas' , 'fourthpa'
-inp1 db 0ah dup('$')
-inp2 db 08h dup('$')
+disp3 db 'Hello $'
+usr_dict db 'himynameis$', 'pointlessb$' , 'adirasamam$' , 'beddingisl$'
+pass_dict db 'firstpas$' , 'secondpa$' , 'thirdpas$' , 'fourthpa$'
+inp1 db 0ch dup('$')
+inp2 db 0ah dup('$')
 cmd db 0ah,0dh,'$'
 ast db 2ah,'$'
 .code
@@ -24,11 +25,15 @@ x1:	MOV AH, 01h; AH -01 parameter for INT 21h
 	stosb
 	loop x1
 	mov bx,04h
-	lea ax,inp1
-	lea di,usr_dict
-x2:	mov cx,0ah
-	cld
-	repe scasb
+	lea si,inp1
+x2:	lea di,usr_dict
+	mov cx,04h
+	sub cx,bx
+	mov ax,0ch
+	mul cx
+	add di,ax
+	mov cx,0ah
+	repe cmpsb
 	cmp cx,0
 	jz x3
 	dec bx
